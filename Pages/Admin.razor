@@ -59,7 +59,7 @@
     }
 
     #footer {
-        position: fixed;
+        position: relative;
         bottom: 0;
         text-align: center;
         width: 100%;
@@ -94,9 +94,9 @@
             color: #777;
         }
     marquee {
-        font-size: 30px;
+        font-size: 20px;
         font-weight: 800;
-        color: #8ebf42;
+        color: blue;
         font-family: sans-serif
 </style>
 
@@ -122,10 +122,12 @@
                 <MatButton OnClick="@(e => { logoutDialog = false; })" Link="@baseUrl.isocratesWebsite">Yes</MatButton>
             </MatDialogActions>
         </MatDialog>
-        <h1>ANNOUNCEMENTS</h1>
-        <marquee>Sports Day on September 1</marquee>
-        <marquee>Quarterly Exams Commences on October</marquee>
-        <marquee>Parent's Meeting on 2nd September</marquee>
+        <marquee>
+            ANNOUNCEMENTS:<br />
+            Sports Day on September 1<br />
+            Quarterly Exams Commences on October<br />
+            Parent's Meeting on 2nd September<br />
+        </marquee>
         @if (blob != null)
         {
     <div class="container-fluid pl-5 pr-5 justify-content-center" style="width:98vw;">
@@ -140,32 +142,57 @@
                         <div class="owl-carousel1 owl-carousel owl-loaded justify-content-center" style="min-height: 140px; text-align:center; line-height:50px;">
                             @foreach (var single in blob)
                             {
-    @if (single.filename.Contains("Sprint") || single.filename.Contains("Report"))
-    {
-    <NavLink href="@("Report/" + single.filename)" style="text-decoration: none; color: black;">
-        <div class="item">
-            <MatIcon Icon="@MatIconNames.Insert_drive_file" Style="font-size:50px;"></MatIcon>
-            <br>
-            <h6 class="mt-2">@single.filename</h6>
-        </div>
-    </NavLink>}}
+                                @if (single.filename.Contains("Sprint") || single.filename.Contains("Report"))
+                                {
+                                    <NavLink href="@("Report/" + single.filename)" style="text-decoration: none; color: black;">
+                                        <div class="item">
+                                            <MatIcon Icon="@MatIconNames.Insert_drive_file" Style="font-size:50px;"></MatIcon>
+                                            <br>
+                                            <h6 class="mt-2">@single.filename</h6>
+                                        </div>
+                                    </NavLink>}}
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-lg-6" style="min-height: 150px;">
                 <div class="shadow ml-0 ml-lg-1">
-                    <!-- reports -->
+                    <!-- attendance -->
                     <div class="row">
-                        <h4 style="margin-left:auto;margin-right:auto;margin-top:15px;" class="text-info">Reports</h4>
+                        <h4 style="margin-left:auto;margin-right:auto;margin-top:15px;" class="text-info">Attendance</h4>
                     </div>
-                    <div class="large-12 columns ">
+                    <div class="large-12 columns">
                         <div class="owl-carousel1 owl-carousel owl-loaded justify-content-center" style="min-height: 140px; text-align:center; line-height:50px;">
                             @foreach (var single in blob)
                             {
-    @if (single.filename.Contains("Sprint") || single.filename.Contains("Report"))
+                                @if (single.filename.Contains("Attn"))
+                                {
+                                    <NavLink href="@("Attendance/" + single.filename)" style="text-decoration: none; color: black;">
+                                        <div class="item">
+                                            <MatIcon Icon="@MatIconNames.Insert_drive_file" Style="font-size:50px;"></MatIcon>
+                                            <br>
+                                            <h6 class="mt-2">@single.filename</h6>
+                                        </div>
+                                    </NavLink>}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-between mb-lg-3">
+            <div class="col-12 col-lg-6 mb-lg-0 mb-4" style="min-height: 150px;">
+                <div class="shadow mr-0 mr-lg-1">
+                    <!-- teachertimetable -->
+                    <div class="row">
+                        <h4 style="margin-left:auto;margin-right:auto;margin-top:15px;" class="text-info">Teacher Timetable</h4>
+                    </div>
+                    <div class="large-12 columns">
+                        <div class="owl-carousel1 owl-carousel owl-loaded justify-content-center" style="min-height: 140px; text-align:center; line-height:50px;">
+                            @foreach (var single in blob)
+                            {
+    @if (single.filename.Contains("CTT"))
     {
-    <NavLink href="@("Report/" + single.filename)" style="text-decoration: none; color: black;">
+    <NavLink href="@("Teachertimetable/" + single.filename)" style="text-decoration: none; color: black;">
         <div class="item">
             <MatIcon Icon="@MatIconNames.Insert_drive_file" Style="font-size:50px;"></MatIcon>
             <br>
@@ -175,20 +202,21 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
-    </div>
-                            <footer id="footer">
-                                Copyright &copy; 2020 Isocrates.app
-                                <ul class="f-menu">
-                                    <li><a href="">Home</a></li>
-                                    <li><a href="">Dashboard</a></li>
-                                    <li><a href="">Reports</a></li>
-                                    <li><a href="">Support</a></li>
-                                    <li><a href="">Contact</a></li>
-                                </ul>
-                            </footer>}
-    </MatAppBarContent>
+       </div>
+        <footer id="footer">
+            Copyright &copy; 2020 Isocrates.app
+            <ul class="f-menu">
+                <li><a href="">Home</a></li>
+                <li><a href="">Dashboard</a></li>
+                <li><a href="">Reports</a></li>
+                <li><a href="">Support</a></li>
+                <li><a href="">Contact</a></li>
+            </ul>
+        </footer>}
+</MatAppBarContent>
 </MatAppBarContainer>
 @code { [Parameter]
             public string username { get; set; }
@@ -203,9 +231,9 @@
             string res;
             protected override async Task OnInitializedAsync()
             {
-                //res = await Http.GetStringAsync(baseUrl.allReports + ad.username.ToLower());
-                res = await Http.GetStringAsync(baseUrl.myGit);
-                Console.WriteLine(res);
+                res = await Http.GetStringAsync(baseUrl.allReports + ad.username.ToLower());
+                //res = await Http.GetStringAsync(baseUrl.myGit);
+                //Console.WriteLine(res);
                 blob = JsonConvert.DeserializeObject<Blob[]>(res);
             }
             protected override void OnAfterRender(bool firstRender)
